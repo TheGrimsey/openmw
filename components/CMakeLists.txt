@@ -28,28 +28,17 @@ endif (GIT_CHECKOUT)
 
 # source files
 
-add_component_dir (settings
-    settings parser
-    )
+add_component_dir (settings settings parser)
 
-add_component_dir (bsa
-    bsa_file compressedbsafile memorystream
-    )
+add_component_dir (bsa bsa_file compressedbsafile memorystream)
 
-add_component_dir (vfs
-    manager archive bsaarchive filesystemarchive registerarchives
-    )
+add_component_dir (vfs manager archive bsaarchive filesystemarchive registerarchives)
 
-add_component_dir (resource
-    scenemanager keyframemanager imagemanager bulletshapemanager bulletshape niffilemanager objectcache multiobjectcache resourcesystem resourcemanager stats
-    )
+add_component_dir (resource scenemanager keyframemanager imagemanager bulletshapemanager bulletshape niffilemanager objectcache multiobjectcache resourcesystem resourcemanager stats)
 
-add_component_dir (shader
-    shadermanager shadervisitor
-    )
+add_component_dir (shader shadermanager shadervisitor)
 
-add_component_dir (sceneutil
-    clone attach visitor util statesetupdater controller skeleton riggeometry morphgeometry lightcontroller
+add_component_dir (sceneutil clone attach visitor util statesetupdater controller skeleton riggeometry morphgeometry lightcontroller
     lightmanager lightutil positionattitudetransform workqueue unrefqueue pathgridutil waterutil writescene serialize optimizer
     actorutil detourdebugdraw navmesh agentpath shadow mwshadowtechnique recastmesh
     )
