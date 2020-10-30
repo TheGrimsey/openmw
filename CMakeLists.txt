@@ -24,7 +24,6 @@ cmake_minimum_required(VERSION 3.12)
 # Set up configuration.
 set(CMAKE_CONFIGURATION_TYPES Debug Release RelWithDebInfo CACHE STRING "" FORCE)
 set(CMAKE_CXX_STANDARD 17)
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(ROOT_FOLDER ${PROJECT_NAME})
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
@@ -100,100 +99,15 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${BINARY_DIR}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${BINARY_DIR}")
 
 # Other files
-configure_resource_file(${OpenMW_SOURCE_DIR}/files/settings-default.cfg
-    "${BINARY_DIR}" "settings-default.cfg")
+configure_resource_file(${SOURCE_DIR}/files/settings-default.cfg "${BINARY_DIR}" "settings-default.cfg")
+configure_resource_file(${SOURCE_DIR}/files/openmw.appdata.xml "${BINARY_DIR}" "openmw.appdata.xml")
+configure_resource_file(${SOURCE_DIR}/files/openmw.cfg.local "${BINARY_DIR}" "openmw.cfg")
+configure_resource_file(${SOURCE_DIR}/files/openmw.cfg "${BINARY_DIR}" "openmw.cfg.install")
+configure_resource_file(${SOURCE_DIR}/files/openmw-cs.cfg "${BINARY_DIR}" "openmw-cs.cfg")
+configure_resource_file(${SOURCE_DIR}/files/gamecontrollerdb.txt "${BINARY_DIR}" "gamecontrollerdb.txt")
 
-configure_resource_file(${OpenMW_SOURCE_DIR}/files/openmw.appdata.xml
-    "${BINARY_DIR}" "openmw.appdata.xml")
-
-configure_resource_file(${OpenMW_SOURCE_DIR}/files/openmw.cfg.local
-    "${BINARY_DIR}" "openmw.cfg")
-configure_resource_file(${OpenMW_SOURCE_DIR}/files/openmw.cfg
-    "${BINARY_DIR}" "openmw.cfg.install")
-
-configure_resource_file(${OpenMW_SOURCE_DIR}/files/openmw-cs.cfg
-    "${BINARY_DIR}" "openmw-cs.cfg")
-
-# Installation.
-file(GLOB dll_files_debug "${OpenMW_BINARY_DIR}/Debug/*.dll")
-file(GLOB dll_files_release "${OpenMW_BINARY_DIR}/Release/*.dll")
-install(FILES ${dll_files_debug} DESTINATION "." CONFIGURATIONS Debug)
-install(FILES ${dll_files_release} DESTINATION "." CONFIGURATIONS Release;RelWithDebInfo;MinSizeRel)
-
-install(FILES "${OpenMW_BINARY_DIR}/Debug/openmw.cfg.install" DESTINATION "." RENAME "openmw.cfg" CONFIGURATIONS Debug)
-install(FILES "${OpenMW_BINARY_DIR}/Release/openmw.cfg.install" DESTINATION "." RENAME "openmw.cfg" CONFIGURATIONS Release;RelWithDebInfo;MinSizeRel)
-install(FILES "${OpenMW_BINARY_DIR}/Debug/settings-default.cfg" DESTINATION "." CONFIGURATIONS Debug)
-install(FILES "${OpenMW_BINARY_DIR}/Release/settings-default.cfg" DESTINATION "." CONFIGURATIONS Release;RelWithDebInfo;MinSizeRel)
-install(FILES "${OpenMW_BINARY_DIR}/Debug/gamecontrollerdb.txt" DESTINATION "." CONFIGURATIONS Debug)
-install(FILES "${OpenMW_BINARY_DIR}/Release/gamecontrollerdb.txt" DESTINATION "." CONFIGURATIONS Release;RelWithDebInfo;MinSizeRel)
-
-install(FILES "${OpenMW_SOURCE_DIR}/files/mygui/DejaVu Font License.txt" DESTINATION ".")
-
-install(DIRECTORY "${OpenMW_BINARY_DIR}/Debug/platforms" DESTINATION "." CONFIGURATIONS Debug)
-install(DIRECTORY "${OpenMW_BINARY_DIR}/Release/platforms" DESTINATION "." CONFIGURATIONS Release;RelWithDebInfo;MinSizeRel)
-install(DIRECTORY "${OpenMW_BINARY_DIR}/Debug/resources" DESTINATION "." CONFIGURATIONS Debug)
-install(DIRECTORY "${OpenMW_BINARY_DIR}/Release/resources" DESTINATION "." CONFIGURATIONS Release;RelWithDebInfo;MinSizeRel)
-
-file(GLOB plugin_dir_debug "${OpenMW_BINARY_DIR}/Debug/osgPlugins-*")
-file(GLOB plugin_dir_release "${OpenMW_BINARY_DIR}/Release/osgPlugins-*")
-install(DIRECTORY ${plugin_dir_debug} DESTINATION "." CONFIGURATIONS Debug)
-install(DIRECTORY ${plugin_dir_release} DESTINATION "." CONFIGURATIONS Release;RelWithDebInfo;MinSizeRel)
-
-set(CPACK_GENERATOR "NSIS")
-set(CPACK_PACKAGE_NAME "OpenMW")
-set(CPACK_PACKAGE_VENDOR "OpenMW.org")
-set(CPACK_PACKAGE_VERSION ${OPENMW_VERSION})
-set(CPACK_PACKAGE_VERSION_MAJOR ${OPENMW_VERSION_MAJOR})
-set(CPACK_PACKAGE_VERSION_MINOR ${OPENMW_VERSION_MINOR})
-set(CPACK_PACKAGE_VERSION_PATCH ${OPENMW_VERSION_RELEASE})
-set(CPACK_PACKAGE_EXECUTABLES "openmw;OpenMW")
-if(BUILD_LAUNCHER)
-    set(CPACK_PACKAGE_EXECUTABLES "${CPACK_PACKAGE_EXECUTABLES};openmw-launcher;OpenMW Launcher")
-endif(BUILD_LAUNCHER)
-if(BUILD_OPENCS)
-    set(CPACK_PACKAGE_EXECUTABLES "${CPACK_PACKAGE_EXECUTABLES};openmw-cs;OpenMW Construction Set")
-endif(BUILD_OPENCS)
-if(BUILD_WIZARD)
-    set(CPACK_PACKAGE_EXECUTABLES "${CPACK_PACKAGE_EXECUTABLES};openmw-wizard;OpenMW Wizard")
-endif(BUILD_WIZARD)
-
-set(CPACK_NSIS_CREATE_ICONS_EXTRA "CreateShortCut '\$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Readme.lnk' '\$INSTDIR\\\\README.txt'")
-set(CPACK_NSIS_DELETE_ICONS_EXTRA "!insertmacro MUI_STARTMENU_GETFOLDER Application $MUI_TEMP Delete \\\"$SMPROGRAMS\\\\$MUI_TEMP\\\\Readme.lnk\\\"")
-set(CPACK_RESOURCE_FILE_README "${OpenMW_SOURCE_DIR}/README.md")
-set(CPACK_PACKAGE_DESCRIPTION_FILE "${OpenMW_SOURCE_DIR}/README.md")
-set(CPACK_NSIS_EXECUTABLES_DIRECTORY ".")
-set(CPACK_NSIS_DISPLAY_NAME "OpenMW ${OPENMW_VERSION}")
-set(CPACK_NSIS_HELP_LINK "https:\\\\\\\\www.openmw.org")
-set(CPACK_NSIS_URL_INFO_ABOUT "https:\\\\\\\\www.openmw.org")
-set(CPACK_NSIS_INSTALLED_ICON_NAME "openmw-launcher.exe")
-set(CPACK_NSIS_MUI_FINISHPAGE_RUN "openmw-launcher.exe")
-set(CPACK_NSIS_MUI_ICON "${OpenMW_SOURCE_DIR}/files/windows/openmw.ico")
-set(CPACK_NSIS_MUI_UNIICON "${OpenMW_SOURCE_DIR}/files/windows/openmw.ico")
-set(CPACK_PACKAGE_ICON "${OpenMW_SOURCE_DIR}\\\\files\\\\openmw.bmp")
-
-set(VCREDIST32 "${OpenMW_BINARY_DIR}/vcredist_x86.exe")
-if(EXISTS ${VCREDIST32})
-    install(FILES ${VCREDIST32} DESTINATION "redist")
-    set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "ExecWait '\\\"$INSTDIR\\\\redist\\\\vcredist_x86.exe\\\" /q'" )
-endif(EXISTS ${VCREDIST32})
-
-set(VCREDIST64 "${OpenMW_BINARY_DIR}/vcredist_x64.exe")
-if(EXISTS ${VCREDIST64})
-    install(FILES ${VCREDIST64} DESTINATION "redist")
-    set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "ExecWait '\\\"$INSTDIR\\\\redist\\\\vcredist_x64.exe\\\" /q'" )
-endif(EXISTS ${VCREDIST64})
-
-set(OALREDIST "${OpenMW_BINARY_DIR}/oalinst.exe")
-if(EXISTS ${OALREDIST})
-    install(FILES ${OALREDIST} DESTINATION "redist")
-    set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "${CPACK_NSIS_EXTRA_INSTALL_COMMANDS} ExecWait '\\\"$INSTDIR\\\\redist\\\\oalinst.exe\\\" /s'" )
-endif(EXISTS ${OALREDIST})
-
-if(CMAKE_CL_64)
-    set(CPACK_NSIS_INSTALL_ROOT "$PROGRAMFILES64")
-endif()
-
-include(CPack)
+# Needs the copy version because the configure version assumes the end of the file has been reached when a null character is reached and there are no CMake expressions to evaluate.
+copy_resource_file(${SOURCE_DIR}/files/opencs/defaultfilters "${BINARY_DIR}" "resources/defaultfilters")
 
 # Extern
 set(RECASTNAVIGATION_STATIC ON CACHE BOOL "Build recastnavigation static libraries")
@@ -250,3 +164,99 @@ endif(BUILD_NIFTEST)
 if (BUILD_UNITTESTS)
   add_subdirectory( apps/openmw_test_suite )
 endif()
+
+# Installation
+get_generator_is_multi_config(multi_config)
+if (multi_config)
+    SET(INSTALL_SOURCE "${BINARY_DIR}/$<CONFIG>")
+else (multi_config)
+    SET(INSTALL_SOURCE "${BINARY_DIR}")
+endif (multi_config)
+
+if(WIN32)
+    INSTALL(DIRECTORY "${INSTALL_SOURCE}/" DESTINATION "." FILES_MATCHING PATTERN "*.dll"
+        PATTERN "deps" EXCLUDE
+        PATTERN "apps" EXCLUDE
+        PATTERN "CMakeFiles" EXCLUDE
+        PATTERN "components" EXCLUDE
+        PATTERN "docs" EXCLUDE
+        PATTERN "extern" EXCLUDE
+        PATTERN "files" EXCLUDE
+        PATTERN "Testing" EXCLUDE)
+
+    INSTALL(DIRECTORY "${INSTALL_SOURCE}/" DESTINATION "." CONFIGURATIONS Debug;RelWithDebInfo FILES_MATCHING PATTERN "*.pdb"
+        PATTERN "deps" EXCLUDE
+        PATTERN "apps" EXCLUDE
+        PATTERN "CMakeFiles" EXCLUDE
+        PATTERN "components" EXCLUDE
+        PATTERN "docs" EXCLUDE
+        PATTERN "extern" EXCLUDE
+        PATTERN "files" EXCLUDE
+        PATTERN "Testing" EXCLUDE)
+
+    INSTALL(FILES "${INSTALL_SOURCE}/openmw.cfg.install" DESTINATION "." RENAME "openmw.cfg")
+    INSTALL(FILES "${SOURCE_DIR}/CHANGELOG.md" DESTINATION "." RENAME "CHANGELOG.txt")
+    INSTALL(FILES "${SOURCE_DIR}/README.md" DESTINATION "." RENAME "README.txt")
+    INSTALL(FILES "${SOURCE_DIR}/LICENSE" DESTINATION "." RENAME "LICENSE.txt")
+    INSTALL(FILES "${SOURCE_DIR}/files/mygui/DejaVuFontLicense.txt" DESTINATION ".")
+    INSTALL(FILES "${INSTALL_SOURCE}/settings-default.cfg" DESTINATION ".")
+    INSTALL(FILES "${INSTALL_SOURCE}/gamecontrollerdb.txt" DESTINATION ".")
+
+    INSTALL(DIRECTORY "${INSTALL_SOURCE}/resources" DESTINATION ".")
+
+    SET(CPACK_GENERATOR "NSIS")
+    SET(CPACK_PACKAGE_NAME "OpenMW")
+    SET(CPACK_PACKAGE_VENDOR "OpenMW.org")
+    SET(CPACK_PACKAGE_VERSION ${OPENMW_VERSION})
+    SET(CPACK_PACKAGE_VERSION_MAJOR ${OPENMW_VERSION_MAJOR})
+    SET(CPACK_PACKAGE_VERSION_MINOR ${OPENMW_VERSION_MINOR})
+    SET(CPACK_PACKAGE_VERSION_PATCH ${OPENMW_VERSION_RELEASE})
+    SET(CPACK_PACKAGE_EXECUTABLES "openmw;OpenMW")
+    IF(BUILD_LAUNCHER)
+        SET(CPACK_PACKAGE_EXECUTABLES "${CPACK_PACKAGE_EXECUTABLES};openmw-launcher;OpenMW Launcher")
+    ENDIF(BUILD_LAUNCHER)
+    IF(BUILD_OPENCS)
+        SET(CPACK_PACKAGE_EXECUTABLES "${CPACK_PACKAGE_EXECUTABLES};openmw-cs;OpenMW Construction Set")
+    ENDIF(BUILD_OPENCS)
+    IF(BUILD_WIZARD)
+        SET(CPACK_PACKAGE_EXECUTABLES "${CPACK_PACKAGE_EXECUTABLES};openmw-wizard;OpenMW Wizard")
+    ENDIF(BUILD_WIZARD)
+    SET(CPACK_NSIS_CREATE_ICONS_EXTRA "CreateShortCut '\$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Readme.lnk' '\$INSTDIR\\\\README.txt'")
+    SET(CPACK_NSIS_DELETE_ICONS_EXTRA "!insertmacro MUI_STARTMENU_GETFOLDER Application $MUI_TEMP Delete \\\"$SMPROGRAMS\\\\$MUI_TEMP\\\\Readme.lnk\\\"")
+    SET(CPACK_RESOURCE_FILE_README "${SOURCE_DIR}/README.md")
+    SET(CPACK_PACKAGE_DESCRIPTION_FILE "${SOURCE_DIR}/README.md")
+    SET(CPACK_NSIS_EXECUTABLES_DIRECTORY ".")
+    SET(CPACK_NSIS_DISPLAY_NAME "OpenMW ${OPENMW_VERSION}")
+    SET(CPACK_NSIS_HELP_LINK "https:\\\\\\\\www.openmw.org")
+    SET(CPACK_NSIS_URL_INFO_ABOUT "https:\\\\\\\\www.openmw.org")
+    SET(CPACK_NSIS_INSTALLED_ICON_NAME "openmw-launcher.exe")
+    SET(CPACK_NSIS_MUI_FINISHPAGE_RUN "openmw-launcher.exe")
+    SET(CPACK_NSIS_MUI_ICON "${SOURCE_DIR}/files/windows/openmw.ico")
+    SET(CPACK_NSIS_MUI_UNIICON "${SOURCE_DIR}/files/windows/openmw.ico")
+    SET(CPACK_PACKAGE_ICON "${SOURCE_DIR}\\\\files\\\\openmw.bmp")
+
+    SET(VCREDIST32 "${BINARY_DIR}/vcredist_x86.exe")
+    if(EXISTS ${VCREDIST32})
+        INSTALL(FILES ${VCREDIST32} DESTINATION "redist")
+        SET(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "ExecWait '\\\"$INSTDIR\\\\redist\\\\vcredist_x86.exe\\\" /q'" )
+    endif(EXISTS ${VCREDIST32})
+
+    SET(VCREDIST64 "${BINARY_DIR}/vcredist_x64.exe")
+    if(EXISTS ${VCREDIST64})
+        INSTALL(FILES ${VCREDIST64} DESTINATION "redist")
+        SET(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "ExecWait '\\\"$INSTDIR\\\\redist\\\\vcredist_x64.exe\\\" /q'" )
+    endif(EXISTS ${VCREDIST64})
+
+    SET(OALREDIST "${BINARY_DIR}/oalinst.exe")
+    if(EXISTS ${OALREDIST})
+        INSTALL(FILES ${OALREDIST} DESTINATION "redist")
+        SET(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "${CPACK_NSIS_EXTRA_INSTALL_COMMANDS} ExecWait '\\\"$INSTDIR\\\\redist\\\\oalinst.exe\\\" /s'" )
+    endif(EXISTS ${OALREDIST})
+
+    if(CMAKE_CL_64)
+        SET(CPACK_NSIS_INSTALL_ROOT "$PROGRAMFILES64")
+    endif()
+
+    include(CPack)
+endif(WIN32)
+# TODO LINUX INSTALLATION
