@@ -88,7 +88,7 @@ include_directories("."
     ${MyGUI_INCLUDE_DIRS}
     ${SDL2_INCLUDE_DIR}
     ${OPENAL_INCLUDE_DIR}
-    ${Bullet_INCLUDE_DIRS}
+    ${Bullet_INCLUDE_DIR}
 )
 link_directories(${SDL2_LIBRARY_DIRS} ${Boost_LIBRARY_DIRS})
 
